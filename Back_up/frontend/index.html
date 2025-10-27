@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>기억 아카이브 | Memory Archive</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/calendar.css" />
+    <link rel="stylesheet" href="./css/mood.css" />
+</head>
+
+<body>
+    <header class="app-header">
+        <h1>기억 아카이브</h1>
+        <div class="header-actions">
+            <button id="exportJsonBtn" class="btn">내보내기(JSON)</button>
+            <label class="btn btn-file">
+                가져오기(JSON)
+                <input id="importJsonInput" type="file" accept="application/json" hidden />
+            </label>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="calendar-section">
+            <div class="calendar-header">
+                <button id="prevMonthBtn" aria-label="이전 달" class="btn-ghost">‹</button>
+                <h2 id="calendarTitle" aria-live="polite">2025년 10월</h2>
+                <button id="nextMonthBtn" aria-label="다음 달" class="btn-ghost">›</button>
+            </div>
+            <div id="calendarGrid" class="calendar-grid" role="grid" aria-label="달력"></div>
+            <div class="legend">
+                <span class="legend-item"><span class="dot joy"></span>기쁨</span>
+                <span class="legend-item"><span class="dot calm"></span>차분</span>
+                <span class="legend-item"><span class="dot neutral"></span>보통</span>
+                <span class="legend-item"><span class="dot sad"></span>슬픔</span>
+                <span class="legend-item"><span class="dot angry"></span>화남</span>
+            </div>
+        </section>
+
+        <section class="entry-section">
+            <div class="entry-header">
+                <h3 id="selectedDateLabel">날짜 선택</h3>
+            </div>
+
+            <form id="entryForm" class="entry-form" autocomplete="off">
+                <div id="questionsContainer" class="questions"></div>
+
+                <div class="mood-row">
+                    <label class="label">오늘의 감정</label>
+                    <div id="moodSelector" class="mood-selector"></div>
+                </div>
+
+                <div class="form-actions">
+                    <button id="saveBtn" type="submit" class="btn primary">저장</button>
+                    <button id="clearBtn" type="button" class="btn danger">삭제</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <small>© 2025 기억 아카이브</small>
+    </footer>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
+
+</html>
