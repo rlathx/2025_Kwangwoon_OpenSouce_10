@@ -1,0 +1,31 @@
+.mood-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mood-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+}
+
+.mood-pill[data-selected="true"] {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+}
+
+.mood-emoji {
+    font-size: 18px
+}
+
+.mood-name {
+    font-size: 14px;
+    color: var(--muted)
+}

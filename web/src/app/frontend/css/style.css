@@ -1,0 +1,206 @@
+:root {
+    --bg: #0f1115;
+    --panel: #181b22;
+    --panel-2: #1f2430;
+    --text: #e6e6e6;
+    --muted: #aab0bc;
+    --primary: #7aa2f7;
+    --danger: #ff6b6b;
+    --border: #2a2f3b;
+    --focus: #a7f3d0;
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    height: 100%
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Apple SD Gothic Neo, "맑은 고딕", "Malgun Gothic", sans-serif;
+}
+
+.app-header,
+.app-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+}
+
+.app-footer {
+    border-top: 1px solid var(--border);
+    border-bottom: none;
+    justify-content: center;
+}
+
+.app-main {
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+    grid-template-columns: 1.2fr 1fr;
+}
+
+@media (max-width: 900px) {
+    .app-main {
+        grid-template-columns: 1fr
+    }
+}
+
+.calendar-section,
+.entry-section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+h1 {
+    font-size: 20px;
+    margin: 0
+}
+
+h2 {
+    margin: 0;
+    font-size: 18px
+}
+
+h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    color: var(--muted)
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px
+}
+
+.btn {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    opacity: .9
+}
+
+.btn.primary {
+    background: var(--primary);
+    color: #0b1020;
+    border-color: transparent;
+    font-weight: 600
+}
+
+.btn.danger {
+    background: var(--danger);
+    color: #200b0b;
+    border-color: transparent;
+    font-weight: 600
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px
+}
+
+.label {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 6px
+}
+
+.entry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px
+}
+
+.questions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px
+}
+
+.question {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.question label {
+    color: var(--muted);
+    font-size: 14px
+}
+
+.question textarea {
+    background: #0c0f14;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    min-height: 80px;
+    padding: 10px;
+    resize: vertical;
+}
+
+.mood-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px
+}
+
+.legend {
+    margin-top: 10px;
+    color: var(--muted);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px
+}
+
+:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
