@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테마 일기 - 설정</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>📔 테마 일기</h1>
+            <nav>
+                <a href="index.html">메인</a>
+                <a href="diary.html">일기 쓰기</a>
+                <a href="setting.html" class="active">설정</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="settings-section">
+                <h2>⚙️ 설정</h2>
+
+                <!-- 질문 유형 선택 -->
+                <div class="setting-group">
+                    <h3>📝 오늘의 질문 설정</h3>
+                    <p class="description">일기를 쓸 때 보여질 질문 유형을 선택하세요.</p>
+
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="questionType" value="basic" onchange="updateQuestionType()">
+                            <span>기본 질문 (미리 제공된 10개 질문)</span>
+                        </label>
+
+                        <label class="radio-label">
+                            <input type="radio" name="questionType" value="mbti" onchange="updateQuestionType()">
+                            <span>MBTI 맞춤 질문</span>
+                        </label>
+
+                        <label class="radio-label">
+                            <input type="radio" name="questionType" value="custom" onchange="updateQuestionType()">
+                            <span>사용자 정의 질문</span>
+                        </label>
+                    </div>
+
+                    <!-- MBTI 선택 (mbti 질문 선택 시에만 표시) -->
+                    <div id="mbtiSelector" class="sub-setting" style="display: none;">
+                        <label for="mbtiSelect">MBTI 유형 선택:</label>
+                        <select id="mbtiSelect" onchange="saveSettings()">
+                            <option value="ISTJ">ISTJ - 세상의 소금형</option>
+                            <option value="ISFJ">ISFJ - 임금 뒤편의 권력형</option>
+                            <option value="INFJ">INFJ - 예언자형</option>
+                            <option value="INTJ">INTJ - 과학자형</option>
+                            <option value="ISTP">ISTP - 백과사전형</option>
+                            <option value="ISFP">ISFP - 성인군자형</option>
+                            <option value="INFP">INFP - 잔다르크형</option>
+                            <option value="INTP">INTP - 아이디어 뱅크형</option>
+                            <option value="ESTP">ESTP - 수완좋은 활동가형</option>
+                            <option value="ESFP">ESFP - 사교적인 유형</option>
+                            <option value="ENFP">ENFP - 스파크형</option>
+                            <option value="ENTP">ENTP - 발명가형</option>
+                            <option value="ESTJ">ESTJ - 사업가형</option>
+                            <option value="ESFJ">ESFJ - 친선도모형</option>
+                            <option value="ENFJ">ENFJ - 언변능숙형</option>
+                            <option value="ENTJ">ENTJ - 지도자형</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 사용자 정의 질문 관리 -->
+                <div class="setting-group">
+                    <h3>➕ 나만의 질문 추가</h3>
+                    <p class="description">일기에서 사용할 질문을 직접 추가할 수 있습니다.</p>
+
+                    <div class="add-question-form">
+                        <input type="text" id="newQuestionInput" placeholder="새로운 질문을 입력하세요"
+                            onkeypress="if(event.key === 'Enter') addCustomQuestion()">
+                        <button class="btn btn-primary" onclick="addCustomQuestion()">추가</button>
+                    </div>
+
+                    <div id="customQuestionsList" class="custom-questions-list">
+                        <!-- 사용자 정의 질문 목록이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+
+                <!-- 한 마디 유형 선택 -->
+                <div class="setting-group">
+                    <h3>💬 오늘의 한 마디 설정</h3>
+                    <p class="description">메인 페이지와 일기 작성 시 보여질 한 마디 유형을 선택하세요.</p>
+
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="messageType" value="mbti" onchange="updateMessageType()">
+                            <span>MBTI 맞춤 한 마디</span>
+                        </label>
+
+                        <label class="radio-label">
+                            <input type="radio" name="messageType" value="quote" onchange="updateMessageType()">
+                            <span>명언</span>
+                        </label>
+                    </div>
+
+                    <!-- MBTI 선택 (mbti 한마디 선택 시에만 표시) -->
+                    <div id="mbtiMessageSelector" class="sub-setting" style="display: none;">
+                        <label for="mbtiMessageSelect">MBTI 유형 선택:</label>
+                        <select id="mbtiMessageSelect" onchange="saveSettings()">
+                            <option value="ISTJ">ISTJ - 세상의 소금형</option>
+                            <option value="ISFJ">ISFJ - 임금 뒤편의 권력형</option>
+                            <option value="INFJ">INFJ - 예언자형</option>
+                            <option value="INTJ">INTJ - 과학자형</option>
+                            <option value="ISTP">ISTP - 백과사전형</option>
+                            <option value="ISFP">ISFP - 성인군자형</option>
+                            <option value="INFP">INFP - 잔다르크형</option>
+                            <option value="INTP">INTP - 아이디어 뱅크형</option>
+                            <option value="ESTP">ESTP - 수완좋은 활동가형</option>
+                            <option value="ESFP">ESFP - 사교적인 유형</option>
+                            <option value="ENFP">ENFP - 스파크형</option>
+                            <option value="ENTP">ENTP - 발명가형</option>
+                            <option value="ESTJ">ESTJ - 사업가형</option>
+                            <option value="ESFJ">ESFJ - 친선도모형</option>
+                            <option value="ENFJ">ENFJ - 언변능숙형</option>
+                            <option value="ENTJ">ENTJ - 지도자형</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 저장 버튼 -->
+                <div class="button-group">
+                    <button class="btn btn-success" onclick="saveSettings()">💾 설정 저장</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        let currentSettings = {};
+        let customQuestions = [];
+
+        // 페이지 로드 시 초기화
+        window.onload = async () => {
+            await loadSettings();
+            await loadCustomQuestions();
+            renderCustomQuestions();
+        };
+
+        // 설정 로드
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/settings');
+                currentSettings = await response.json();
+
+                // 라디오 버튼 설정
+                document.querySelector(`input[name="questionType"][value="${currentSettings.questionType}"]`).checked = true;
+                document.querySelector(`input[name="messageType"][value="${currentSettings.messageType}"]`).checked = true;
+
+                // MBTI 선택 설정
+                document.getElementById('mbtiSelect').value = currentSettings.selectedMBTI;
+                document.getElementById('mbtiMessageSelect').value = currentSettings.selectedMBTI;
+
+                // 조건부 표시
+                updateQuestionType();
+                updateMessageType();
+            } catch (error) {
+                console.error('설정 로드 실패:', error);
+            }
+        }
+
+        // 사용자 정의 질문 로드
+        async function loadCustomQuestions() {
+            try {
+                const response = await fetch('/api/questions');
+                const data = await response.json();
+                customQuestions = data.custom || [];
+            } catch (error) {
+                console.error('질문 로드 실패:', error);
+                customQuestions = [];
+            }
+        }
+
+        // 질문 유형 변경 시
+        function updateQuestionType() {
+            const questionType = document.querySelector('input[name="questionType"]:checked').value;
+            const mbtiSelector = document.getElementById('mbtiSelector');
+
+            if (questionType === 'mbti') {
+                mbtiSelector.style.display = 'block';
+            } else {
+                mbtiSelector.style.display = 'none';
+            }
+
+            saveSettings();
+        }
+
+        // 메시지 유형 변경 시
+        function updateMessageType() {
+            const messageType = document.querySelector('input[name="messageType"]:checked').value;
+            const mbtiMessageSelector = document.getElementById('mbtiMessageSelector');
+
+            if (messageType === 'mbti') {
+                mbtiMessageSelector.style.display = 'block';
+            } else {
+                mbtiMessageSelector.style.display = 'none';
+            }
+
+            saveSettings();
+        }
+
+        // 설정 저장
+        async function saveSettings() {
+            const questionType = document.querySelector('input[name="questionType"]:checked').value;
+            const messageType = document.querySelector('input[name="messageType"]:checked').value;
+            const selectedMBTI = document.getElementById('mbtiSelect').value;
+
+            const settings = {
+                questionType: questionType,
+                messageType: messageType,
+                selectedMBTI: selectedMBTI
+            };
+
+            try {
+                const response = await fetch('/api/settings', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(settings)
+                });
+
+                if (response.ok) {
+                    console.log('설정이 저장되었습니다.');
+                }
+            } catch (error) {
+                console.error('설정 저장 실패:', error);
+                alert('설정 저장에 실패했습니다.');
+            }
+        }
+
+        // 사용자 정의 질문 추가
+        async function addCustomQuestion() {
+            const input = document.getElementById('newQuestionInput');
+            const question = input.value.trim();
+
+            if (!question) {
+                alert('질문을 입력해주세요!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/questions/custom', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question: question })
+                });
+
+                if (response.ok) {
+                    input.value = '';
+                    await loadCustomQuestions();
+                    renderCustomQuestions();
+                    alert('질문이 추가되었습니다! ✅');
+                } else {
+                    alert('질문 추가에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('질문 추가 실패:', error);
+                alert('질문 추가 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 사용자 정의 질문 삭제
+        async function deleteCustomQuestion(index) {
+            if (!confirm('이 질문을 삭제하시겠습니까?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/questions/custom/${index}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    await loadCustomQuestions();
+                    renderCustomQuestions();
+                    alert('질문이 삭제되었습니다.');
+                } else {
+                    alert('질문 삭제에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('질문 삭제 실패:', error);
+                alert('질문 삭제 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 사용자 정의 질문 렌더링
+        function renderCustomQuestions() {
+            const listDiv = document.getElementById('customQuestionsList');
+
+            if (customQuestions.length === 0) {
+                listDiv.innerHTML = '<p class="empty-message">아직 추가된 질문이 없습니다.</p>';
+                return;
+            }
+
+            listDiv.innerHTML = customQuestions.map((question, index) => `
+                <div class="question-item">
+                    <span class="question-text">${question}</span>
+                    <button class="btn btn-delete" onclick="deleteCustomQuestion(${index})">🗑️ 삭제</button>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+
+</html>

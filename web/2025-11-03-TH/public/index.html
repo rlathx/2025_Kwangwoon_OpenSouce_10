@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테마 일기 - 메인</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>📔 테마 일기</h1>
+            <nav>
+                <a href="index.html" class="active">메인</a>
+                <a href="diary.html">일기 쓰기</a>
+                <a href="setting.html">설정</a>
+            </nav>
+        </header>
+
+        <main>
+            <!-- 오늘의 한 마디 -->
+            <section class="today-message">
+                <h2>💬 오늘의 한 마디</h2>
+                <div id="messageContent" class="message-box">
+                    <p class="loading">로딩 중...</p>
+                </div>
+            </section>
+
+            <!-- 달력 -->
+            <section class="calendar-section">
+                <div class="month-nav">
+                    <button onclick="changeMonth(-1)" class="nav-btn">◀ 이전</button>
+                    <h2 id="currentMonth"></h2>
+                    <button onclick="changeMonth(1)" class="nav-btn">다음 ▶</button>
+                </div>
+
+                <div class="calendar" id="calendarGrid">
+                    <!-- 달력이 여기에 렌더링됩니다 -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 일기 보기 모달 -->
+    <div id="diaryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalDate"></h2>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+        let diariesData = {};
+
+        // 페이지 로드 시 초기화
+        window.onload = async () => {
+            await loadTodayMessage();
+            await loadDiaries();
+            renderCalendar();
+        };
+
+        // 오늘의 한 마디 로드
+        async function loadTodayMessage() {
+            try {
+                const response = await fetch('/api/today-message');
+                const data = await response.json();
+
+                const messageBox = document.getElementById('messageContent');
+                if (data.type === 'mbti') {
+                    messageBox.innerHTML = `
+                        <p class="message-type">${data.mbti}의 한 마디</p>
+                        <p class="message-text">${data.message}</p>
+                    `;
+                } else {
+                    messageBox.innerHTML = `
+                        <p class="message-type">오늘의 명언</p>
+                        <p class="message-text">${data.message}</p>
+                    `;
+                }
+            } catch (error) {
+                console.error('메시지 로드 실패:', error);
+                document.getElementById('messageContent').innerHTML =
+                    '<p class="error">메시지를 불러올 수 없습니다.</p>';
+            }
+        }
+
+        // 일기 데이터 로드
+        async function loadDiaries() {
+            try {
+                const response = await fetch('/api/diaries');
+                diariesData = await response.json();
+            } catch (error) {
+                console.error('일기 로드 실패:', error);
+                diariesData = {};
+            }
+        }
+
+        // 달력 렌더링
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const monthDisplay = document.getElementById('currentMonth');
+
+            monthDisplay.textContent = `${currentYear}년 ${currentMonth + 1}월`;
+
+            // 달력 초기화
+            grid.innerHTML = '';
+
+            // 요일 헤더
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            days.forEach((day, index) => {
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                if (index === 0) header.classList.add('sunday');
+                if (index === 6) header.classList.add('saturday');
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+
+            // 첫날과 마지막 날 계산
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const lastDate = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            // 빈 칸 채우기
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'calendar-day empty';
+                grid.appendChild(emptyCell);
+            }
+
+            // 날짜 채우기
+            for (let date = 1; date <= lastDate; date++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+
+                const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+                const diary = diariesData[dateKey];
+
+                // 오늘 날짜 표시
+                const today = new Date();
+                if (currentYear === today.getFullYear() &&
+                    currentMonth === today.getMonth() &&
+                    date === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+
+                if (diary) {
+                    dayElement.classList.add('has-diary');
+                    const weatherColor = getWeatherColor(diary.weather);
+                    dayElement.style.background = weatherColor;
+                    dayElement.innerHTML = `
+                        <div class="date-number">${date}</div>
+                        <div class="mood-emoji">${diary.mood}</div>
+                    `;
+                    dayElement.onclick = () => viewDiary(dateKey, diary);
+                } else {
+                    dayElement.innerHTML = `<div class="date-number">${date}</div>`;
+                }
+
+                grid.appendChild(dayElement);
+            }
+        }
+
+        // 날씨별 색상 반환
+        function getWeatherColor(weather) {
+            const colors = {
+                'sunny': '#FFE5B4',
+                'cloudy': '#E0F2F7',
+                'rainy': '#B3E5FC',
+                'snowy': '#F0F0F0',
+                'partly-cloudy': '#FFF9C4'
+            };
+            return colors[weather] || '#FFFFFF';
+        }
+
+        // 월 변경
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar();
+        }
+
+        // 일기 보기
+        function viewDiary(dateKey, diary) {
+            const modal = document.getElementById('diaryModal');
+            const modalDate = document.getElementById('modalDate');
+            const modalContent = document.getElementById('modalContent');
+
+            modalDate.textContent = `📅 ${dateKey}`;
+
+            const weatherEmoji = getWeatherEmoji(diary.weather);
+            modalContent.innerHTML = `
+                <div class="diary-meta">
+                    <span class="mood">${diary.mood}</span>
+                    <span class="weather">${weatherEmoji}</span>
+                </div>
+                <div class="diary-question">
+                    <strong>Q:</strong> ${diary.question}
+                </div>
+                <div class="diary-content">
+                    ${diary.content.replace(/\n/g, '<br>')}
+                </div>
+            `;
+
+            modal.style.display = 'block';
+        }
+
+        // 날씨 이모지 반환
+        function getWeatherEmoji(weather) {
+            const emojis = {
+                'sunny': '☀️ 맑음',
+                'cloudy': '☁️ 흐림',
+                'rainy': '🌧️ 비',
+                'snowy': '❄️ 눈',
+                'partly-cloudy': '⛅ 구름 조금'
+            };
+            return emojis[weather] || weather;
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById('diaryModal').style.display = 'none';
+        }
+
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function (event) {
+            const modal = document.getElementById('diaryModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
