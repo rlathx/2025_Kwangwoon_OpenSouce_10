@@ -2,81 +2,68 @@
 <html lang="ko">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>테마 일기 - 일기 쓰기</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memory Archive | Diary</title>
+
+    <link rel="stylesheet" href="diary_style.css" />
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>📔 테마 일기</h1>
-            <nav>
-                <a href="index.html">메인</a>
-                <a href="diary.html" class="active">일기 쓰기</a>
-                <a href="setting.html">설정</a>
-            </nav>
-        </header>
+    <div class="diary-container">
+        <div class="diary-header">
+            <h1>오늘의 기록 ✍️</h1>
+            <p>기억을 담는 하루, Memory Archive</p>
+        </div>
 
-        <main>
-            <section class="diary-write-section">
-                <h2>✍️ 오늘의 일기</h2>
+        <div class="diary-meta">
+            <div class="meta-row">
+                <span class="meta-label">날짜:</span>
+                <span class="meta-value" id="dateText">—</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">기분:</span>
+                <span class="meta-value" id="moodNow">—</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">날씨:</span>
+                <span class="meta-value" id="weatherNow">—</span>
+            </div>
+        </div>
 
-                <!-- 오늘의 한 마디 -->
-                <div class="today-message-box" id="todayMessage">
-                    <p class="loading">로딩 중...</p>
-                </div>
+        <!-- 오늘의 질문 -->
+        <div class="question-section">
+            <h3>오늘의 질문 💭</h3>
+            <ul id="question-list"></ul>
+        </div>
 
-                <!-- 오늘의 질문 -->
-                <div class="today-question-box" id="todayQuestion">
-                    <p class="loading">로딩 중...</p>
-                </div>
+        <!-- 일기 입력 -->
+        <textarea id="note" placeholder="오늘의 하루를 기록해보세요... ✨"></textarea>
 
-                <!-- 기분과 날씨 선택 -->
-                <div class="mood-weather-selector">
-                    <div class="selector-group">
-                        <label for="moodSelect">오늘의 기분</label>
-                        <select id="moodSelect">
-                            <option value="😊">😊 행복해요</option>
-                            <option value="😢">😢 슬퍼요</option>
-                            <option value="😡">😡 화나요</option>
-                            <option value="😴">😴 피곤해요</option>
-                            <option value="😐">😐 그저 그래요</option>
-                            <option value="🥰">🥰 설레요</option>
-                            <option value="😰">😰 불안해요</option>
-                            <option value="😎">😎 멋져요</option>
-                            <option value="🤔">🤔 생각이 많아요</option>
-                            <option value="😌">😌 평온해요</option>
-                        </select>
-                    </div>
+        <!-- 버튼 -->
+        <div class="button-row">
+            <button type="button" class="btn" id="btnBack">← 뒤로가기</button>
+            <button type="button" class="btn save" id="btnSave">저장하기 💾</button>
+        </div>
 
-                    <div class="selector-group">
-                        <label for="weatherSelect">오늘의 날씨</label>
-                        <select id="weatherSelect">
-                            <option value="sunny">☀️ 맑음</option>
-                            <option value="cloudy">☁️ 흐림</option>
-                            <option value="rainy">🌧️ 비</option>
-                            <option value="snowy">❄️ 눈</option>
-                            <option value="partly-cloudy">⛅ 구름 조금</option>
-                        </select>
-                    </div>
-                </div>
+        <!-- 기분 / 날씨 -->
+        <div class="emoji-section">
+            <h3>오늘의 기분은 어떤가요?</h3>
+            <div class="emoji-list" id="moodList">
+                <span class="emoji-item">😊</span><span class="emoji-item">😢</span><span class="emoji-item">😡</span>
+                <span class="emoji-item">😍</span><span class="emoji-item">😴</span><span class="emoji-item">🥳</span>
+                <span class="emoji-item">😎</span><span class="emoji-item">🤔</span><span class="emoji-item">😭</span>
+            </div>
 
-                <!-- 일기 작성 -->
-                <div class="diary-editor">
-                    <label for="diaryContent">오늘의 이야기를 들려주세요</label>
-                    <textarea id="diaryContent" placeholder="오늘 하루는 어땠나요? 자유롭게 작성해보세요..." rows="15"></textarea>
-                </div>
-
-                <!-- 버튼 -->
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="saveDiary()">💾 저장하기</button>
-                    <button class="btn btn-secondary" onclick="clearDiary()">🔄 초기화</button>
-                </div>
-            </section>
-        </main>
+            <h3>오늘의 날씨는 어떤가요?</h3>
+            <div class="emoji-list" id="weatherList">
+                <span class="emoji-item">☀️</span><span class="emoji-item">🌤️</span><span class="emoji-item">⛅</span>
+                <span class="emoji-item">🌧️</span><span class="emoji-item">⛈️</span><span class="emoji-item">❄️</span>
+                <span class="emoji-item">🌨️</span><span class="emoji-item">🌈</span><span class="emoji-item">💨</span>
+            </div>
+        </div>
     </div>
+
 
     <script>
         let currentQuestion = '';
