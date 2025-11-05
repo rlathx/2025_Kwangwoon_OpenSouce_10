@@ -1,0 +1,177 @@
+/* 기본 레이아웃 */
+body {
+    margin: 0;
+    background: #f4f6f8;
+    color: #222;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "맑은 고딕", sans-serif;
+}
+
+.diary-container {
+    max-width: 800px;
+    width: 90%;
+    margin: 24px auto;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px 20px;
+    box-sizing: border-box;
+}
+
+/* 헤더 */
+.diary-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.diary-header h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: #7c3aed;
+}
+
+.diary-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* 메타정보 */
+.diary-meta {
+    margin: 16px 0;
+    font-size: 14px;
+    color: #374151;
+}
+
+.meta-row {
+    margin: 6px 0;
+}
+
+.meta-label {
+    font-weight: 700;
+    color: #06b6d4;
+}
+
+.meta-value {
+    color: #6b7280;
+}
+
+/* 일기 입력창 */
+textarea {
+    width: 100%;
+    min-height: 260px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 15px;
+    box-sizing: border-box;
+    resize: vertical;
+    outline: none;
+}
+
+/* 버튼 */
+.button-row {
+    margin-top: 12px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #eef2f7;
+    color: #111;
+    text-decoration: none;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #e0e7ff;
+}
+
+.btn.save {
+    background: #a78bfa;
+    border-color: #a78bfa;
+    color: #fff;
+}
+
+.btn.save:hover {
+    background: #8b5cf6;
+}
+
+/* 이모지 부분 */
+.emoji-section {
+    margin-top: 20px;
+}
+
+.emoji-section h3 {
+    margin: 16px 0 8px;
+    font-size: 16px;
+    color: #7c3aed;
+}
+
+.emoji-list {
+    font-size: 26px;
+}
+
+.emoji-item {
+    display: inline-block;
+    padding: 6px 8px;
+    margin: 4px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    user-select: none;
+}
+
+.emoji-item:hover {
+    background: #f3e8ff;
+}
+
+/* 질문  */
+.question-section {
+    background: #faf8ff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 16px auto 24px;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 0 2px 6px rgba(139, 92, 246, 0.06);
+}
+
+.question-section h3 {
+    color: #8b5cf6;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 14px;
+    letter-spacing: 0.4px;
+}
+
+#question-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+}
+
+#question-list li {
+    font-size: 16px;
+    font-weight: 500;
+    color: #2d1b69;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px 16px;
+    width: 90%;
+    max-width: 520px;
+    line-height: 1.5;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.06);
+}
+
+#question-list li:hover {
+    box-shadow: 0 3px 8px rgba(139, 92, 246, 0.1);
+}
