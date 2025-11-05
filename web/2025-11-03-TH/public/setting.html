@@ -2,136 +2,89 @@
 <html lang="ko">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>테마 일기 - 설정</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memory Archive | 설정</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="option_style.css" />
 </head>
 
 <body>
-    <div class="container">
-        <header>
-            <h1>📔 테마 일기</h1>
-            <nav>
-                <a href="index.html">메인</a>
-                <a href="diary.html">일기 쓰기</a>
-                <a href="setting.html" class="active">설정</a>
-            </nav>
-        </header>
+    <div class="settings-card">
+        <h1><i class="bi bi-sliders"></i> 설정</h1>
 
-        <main>
-            <section class="settings-section">
-                <h2>⚙️ 설정</h2>
+        <!-- MBTI -->
+        <div class="mb-3">
+            <label for="mbtiSelect" class="form-label">MBTI 선택</label>
+            <select id="mbtiSelect" class="form-select">
+                <option value="" selected>선택하세요</option>
+                <option>INTJ</option>
+                <option>INTP</option>
+                <option>ENTJ</option>
+                <option>ENTP</option>
+                <option>INFJ</option>
+                <option>INFP</option>
+                <option>ENFJ</option>
+                <option>ENFP</option>
+                <option>ISTJ</option>
+                <option>ISFJ</option>
+                <option>ESTJ</option>
+                <option>ESFJ</option>
+                <option>ISTP</option>
+                <option>ISFP</option>
+                <option>ESTP</option>
+                <option>ESFP</option>
+            </select>
+        </div>
 
-                <!-- 질문 유형 선택 -->
-                <div class="setting-group">
-                    <h3>📝 오늘의 질문 설정</h3>
-                    <p class="description">일기를 쓸 때 보여질 질문 유형을 선택하세요.</p>
+        <div class="sep"></div>
 
-                    <div class="radio-group">
-                        <label class="radio-label">
-                            <input type="radio" name="questionType" value="basic" onchange="updateQuestionType()">
-                            <span>기본 질문 (미리 제공된 10개 질문)</span>
-                        </label>
+        <!-- 오늘의 질문 설정 -->
+        <div class="mb-3">
+            <label for="qSource" class="form-label">오늘의 질문 설정</label>
+            <select id="qSource" class="form-select">
+                <option value="default">기본 질문(10개 제공)</option>
+                <option value="mbti">MBTI 맞춤 질문</option>
+                <option value="custom">사용자 정의 질문</option>
+            </select>
+            <div class="form-text">선택한 질문 설정이 diary에 적용됩니다.</div>
+        </div>
 
-                        <label class="radio-label">
-                            <input type="radio" name="questionType" value="mbti" onchange="updateQuestionType()">
-                            <span>MBTI 맞춤 질문</span>
-                        </label>
+        <!-- 사용자 정의 질문 -->
+        <div class="mb-3" id="customQsWrap">
+            <label class="form-label">나만의 질문 추가</label>
+            <div class="input-group mb-2">
+                <input type="text" id="myQInput" class="form-control" placeholder="질문을 입력하고 ‘추가’ 버튼을 눌러주세요" />
+                <button class="btn btn-outline-primary" id="btnAddMyQ"><i class="bi bi-plus-lg"></i> 추가</button>
+            </div>
+            <ul class="list-group" id="myQList"></ul>
+            <div class="hint mt-1">‘사용자 정의 질문’을 선택하면 이 목록의 질문이 사용됩니다.</div>
+        </div>
 
-                        <label class="radio-label">
-                            <input type="radio" name="questionType" value="custom" onchange="updateQuestionType()">
-                            <span>사용자 정의 질문</span>
-                        </label>
-                    </div>
+        <div class="sep"></div>
 
-                    <!-- MBTI 선택 (mbti 질문 선택 시에만 표시) -->
-                    <div id="mbtiSelector" class="sub-setting" style="display: none;">
-                        <label for="mbtiSelect">MBTI 유형 선택:</label>
-                        <select id="mbtiSelect" onchange="saveSettings()">
-                            <option value="ISTJ">ISTJ - 세상의 소금형</option>
-                            <option value="ISFJ">ISFJ - 임금 뒤편의 권력형</option>
-                            <option value="INFJ">INFJ - 예언자형</option>
-                            <option value="INTJ">INTJ - 과학자형</option>
-                            <option value="ISTP">ISTP - 백과사전형</option>
-                            <option value="ISFP">ISFP - 성인군자형</option>
-                            <option value="INFP">INFP - 잔다르크형</option>
-                            <option value="INTP">INTP - 아이디어 뱅크형</option>
-                            <option value="ESTP">ESTP - 수완좋은 활동가형</option>
-                            <option value="ESFP">ESFP - 사교적인 유형</option>
-                            <option value="ENFP">ENFP - 스파크형</option>
-                            <option value="ENTP">ENTP - 발명가형</option>
-                            <option value="ESTJ">ESTJ - 사업가형</option>
-                            <option value="ESFJ">ESFJ - 친선도모형</option>
-                            <option value="ENFJ">ENFJ - 언변능숙형</option>
-                            <option value="ENTJ">ENTJ - 지도자형</option>
-                        </select>
-                    </div>
-                </div>
+        <!-- 오늘의 한마디 -->
+        <div class="mb-3">
+            <label for="quoteMode" class="form-label">오늘의 한마디 설정</label>
+            <select id="quoteMode" class="form-select">
+                <option value="quote">명언(랜덤)</option>
+                <option value="mbti">MBTI별 맞춤 한마디</option>
+            </select>
+            <div class="form-text">선택한 방식이 메인/일기 페이지의 ‘오늘의 한마디’에 적용됩니다.</div>
+        </div>
 
-                <!-- 사용자 정의 질문 관리 -->
-                <div class="setting-group">
-                    <h3>➕ 나만의 질문 추가</h3>
-                    <p class="description">일기에서 사용할 질문을 직접 추가할 수 있습니다.</p>
+        <div class="sep"></div>
 
-                    <div class="add-question-form">
-                        <input type="text" id="newQuestionInput" placeholder="새로운 질문을 입력하세요"
-                            onkeypress="if(event.key === 'Enter') addCustomQuestion()">
-                        <button class="btn btn-primary" onclick="addCustomQuestion()">추가</button>
-                    </div>
-
-                    <div id="customQuestionsList" class="custom-questions-list">
-                        <!-- 사용자 정의 질문 목록이 여기에 표시됩니다 -->
-                    </div>
-                </div>
-
-                <!-- 한 마디 유형 선택 -->
-                <div class="setting-group">
-                    <h3>💬 오늘의 한 마디 설정</h3>
-                    <p class="description">메인 페이지와 일기 작성 시 보여질 한 마디 유형을 선택하세요.</p>
-
-                    <div class="radio-group">
-                        <label class="radio-label">
-                            <input type="radio" name="messageType" value="mbti" onchange="updateMessageType()">
-                            <span>MBTI 맞춤 한 마디</span>
-                        </label>
-
-                        <label class="radio-label">
-                            <input type="radio" name="messageType" value="quote" onchange="updateMessageType()">
-                            <span>명언</span>
-                        </label>
-                    </div>
-
-                    <!-- MBTI 선택 (mbti 한마디 선택 시에만 표시) -->
-                    <div id="mbtiMessageSelector" class="sub-setting" style="display: none;">
-                        <label for="mbtiMessageSelect">MBTI 유형 선택:</label>
-                        <select id="mbtiMessageSelect" onchange="saveSettings()">
-                            <option value="ISTJ">ISTJ - 세상의 소금형</option>
-                            <option value="ISFJ">ISFJ - 임금 뒤편의 권력형</option>
-                            <option value="INFJ">INFJ - 예언자형</option>
-                            <option value="INTJ">INTJ - 과학자형</option>
-                            <option value="ISTP">ISTP - 백과사전형</option>
-                            <option value="ISFP">ISFP - 성인군자형</option>
-                            <option value="INFP">INFP - 잔다르크형</option>
-                            <option value="INTP">INTP - 아이디어 뱅크형</option>
-                            <option value="ESTP">ESTP - 수완좋은 활동가형</option>
-                            <option value="ESFP">ESFP - 사교적인 유형</option>
-                            <option value="ENFP">ENFP - 스파크형</option>
-                            <option value="ENTP">ENTP - 발명가형</option>
-                            <option value="ESTJ">ESTJ - 사업가형</option>
-                            <option value="ESFJ">ESFJ - 친선도모형</option>
-                            <option value="ENFJ">ENFJ - 언변능숙형</option>
-                            <option value="ENTJ">ENTJ - 지도자형</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- 저장 버튼 -->
-                <div class="button-group">
-                    <button class="btn btn-success" onclick="saveSettings()">💾 설정 저장</button>
-                </div>
-            </section>
-        </main>
+        <!-- 저장 & 돌아가기 -->
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-primary" id="btnSave">저장</button>
+            <span class="badge bg-success ok-badge" id="savedOk"><i class="bi bi-check2"></i>&nbsp;저장됨</span>
+            <a href="index.html" class="btn btn-outline-secondary ms-auto">
+                <i class="bi bi-arrow-left"></i> 돌아가기
+            </a>
+        </div>
     </div>
 
     <script>
