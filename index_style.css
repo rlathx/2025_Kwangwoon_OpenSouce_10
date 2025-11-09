@@ -1,0 +1,311 @@
+/* 변수 & 베이스 */
+:root {
+    --bg: #f9fafb;
+    --card: #fff;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --brand: #8b5cf6;
+    --grid-border: #e5e7eb;
+    --accent: #f59e0b;
+    --info: #06b6d4;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+/* 헤더 & 레이아웃 */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.brand {
+    font-weight: 700;
+    color: var(--brand);
+}
+
+.wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    gap: 24px;
+}
+
+.mbti-badge {
+    background: var(--brand);
+    color: #fff;
+}
+
+/* 달력 프레임 */
+.calendar-shell {
+    flex: 3;
+    background: var(--card);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.cal-title h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.cal-title .badge {
+    background: var(--brand);
+    color: #fff;
+    border: 0;
+}
+
+.month-nav .btn {
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+/* 범례 */
+.legend {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.legend .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot-mood {
+    background: var(--accent);
+}
+
+.dot-note {
+    background: var(--info);
+}
+
+/* 요일 */
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    border-bottom: 1px solid #e5e7eb;
+    background: #f3f4f6;
+}
+
+.weekdays div {
+    padding: 8px 10px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+/* 달력 그리드 & 셀 */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(110px, 1fr);
+}
+
+.cell {
+    position: relative;
+    padding: 10px;
+    min-height: 110px;
+    border-right: 1px solid var(--grid-border);
+    border-bottom: 1px solid var(--grid-border);
+}
+
+.cell:nth-child(7n) {
+    border-right: 0;
+}
+
+.date-num {
+    font-weight: 700;
+    font-size: 14px;
+    color: #334155;
+}
+
+.muted {
+    color: #cbd5e1;
+}
+
+/* 기존 오늘 표시 */
+.cell.today:not(.selected) {
+    background: #ede9fe;
+    outline: 1px solid #c4b5fd;
+    outline-offset: -1px;
+    border-radius: 8px;
+}
+
+/* 선택 표시*/
+.cell.selected {
+    background: #ede9fe;
+    outline: 1px solid #c4b5fd;
+    outline-offset: -1px;
+    border-radius: 8px;
+}
+
+/* 선택이 존재할 때는 오늘 강조 숨기기 */
+#calendarGrid.suppress-today .cell.today:not(.selected) {
+    background: none !important;
+    outline: none !important;
+    border-radius: 0 !important;
+}
+
+/* 이모지 뱃지 */
+.cell .mood-emoji {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.cell.has-emoji {
+    padding-bottom: 26px;
+}
+
+/* 오늘의 한마디 & 감정 그래프 */
+.quote-box {
+    flex: 1.3;
+    background: var(--card);
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .03);
+}
+
+.quote-box h2 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--brand);
+}
+
+.quote-text {
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.6;
+    font-style: italic;
+    text-align: center;
+}
+
+.divider {
+    height: 1px;
+    background: #eef2f7;
+    margin-top: 6px;
+}
+
+.mood-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mood-title {
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mood-legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.mood-legend .pill {
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 999px;
+    padding: 3px 9px;
+}
+
+.mood-graph-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.mood-scale-vertical {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 8px 0;
+}
+
+.mood-graph {
+    flex: 1;
+    height: 200px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 14px;
+    align-items: end;
+    padding: 12px;
+    border: 1px dashed #e5e7eb;
+    border-radius: 12px;
+}
+
+.bar {
+    --v: 60;
+    position: relative;
+    height: calc(var(--v) * 1%);
+    border-radius: 10px 10px 0 0;
+    background: linear-gradient(180deg, rgba(139, 92, 246, .95), rgba(139, 92, 246, .55));
+}
+
+.bar::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, -6px);
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* 반응형 */
+@media (max-width:900px) {
+    .wrap {
+        flex-direction: column
+    }
+
+    .quote-box {
+        order: -1
+    }
+}
