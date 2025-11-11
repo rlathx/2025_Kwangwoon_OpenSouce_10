@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memory Archive | Diary</title>
+
+    <link rel="stylesheet" href="diary_style.css" />
+</head>
+
+<body>
+    <div class="diary-container">
+        <div class="diary-header">
+            <h1>오늘의 기록 ✍️</h1>
+            <p>기억을 담는 하루, Memory Archive</p>
+        </div>
+
+        <div class="diary-meta">
+            <div class="meta-row">
+                <span class="meta-label">날짜:</span>
+                <span class="meta-value" id="dateText">—</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">기분:</span>
+                <span class="meta-value" id="moodNow">—</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">날씨:</span>
+                <span class="meta-value" id="weatherNow">—</span>
+            </div>
+        </div>
+
+        <!-- 오늘의 질문 -->
+        <div class="question-section">
+            <h3>오늘의 질문 💭</h3>
+            <ul id="question-list"></ul>
+        </div>
+
+        <!-- 일기 입력 -->
+        <textarea id="note" placeholder="오늘의 하루를 기록해보세요... ✨"></textarea>
+
+        <!-- 버튼 -->
+        <div class="button-row">
+            <button type="button" class="btn" id="btnBack">← 뒤로가기</button>
+            <button type="button" class="btn save" id="btnSave">저장하기 💾</button>
+        </div>
+
+        <!-- 기분 / 날씨 -->
+        <div class="emoji-section">
+            <h3>오늘의 기분은 어떤가요?<button class="btn-reset" id="btnResetMood">초기화</h3> <!-- 초기화버튼 -->
+            <div class="emoji-list" id="moodList">
+                <span class="emoji-item">😊</span><span class="emoji-item">😢</span><span class="emoji-item">😡</span>
+                <span class="emoji-item">😍</span><span class="emoji-item">😴</span><span class="emoji-item">🥳</span>
+                <span class="emoji-item">😎</span><span class="emoji-item">🤔</span><span class="emoji-item">😭</span>
+            </div>
+
+            <h3>오늘의 날씨는 어떤가요?<button class="btn-reset" id="btnResetWeather">초기화</h3> <!-- 초기화버튼 -->
+            <div class="emoji-list" id="weatherList">
+                <span class="emoji-item">☀️</span><span class="emoji-item">🌤️</span><span class="emoji-item">⛅</span>
+                <span class="emoji-item">🌧️</span><span class="emoji-item">⛈️</span><span class="emoji-item">❄️</span>
+                <span class="emoji-item">🌨️</span><span class="emoji-item">🌈</span><span class="emoji-item">💨</span>
+            </div>
+        </div>
+    </div>
+    <script defer src="diary.js"></script>
+</body>
+
+</html>
