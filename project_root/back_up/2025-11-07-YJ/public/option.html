@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memory Archive | 설정</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="option_style.css" />
+</head>
+
+<body>
+    <div class="settings-card">
+        <h1><i class="bi bi-sliders"></i> 설정</h1>
+
+        <!-- MBTI -->
+        <div class="mb-3">
+            <label for="mbtiSelect" class="form-label">MBTI 선택</label>
+            <select id="mbtiSelect" class="form-select">
+                <option value="" selected>선택하세요</option>
+                <option>INTJ</option>
+                <option>INTP</option>
+                <option>ENTJ</option>
+                <option>ENTP</option>
+                <option>INFJ</option>
+                <option>INFP</option>
+                <option>ENFJ</option>
+                <option>ENFP</option>
+                <option>ISTJ</option>
+                <option>ISFJ</option>
+                <option>ESTJ</option>
+                <option>ESFJ</option>
+                <option>ISTP</option>
+                <option>ISFP</option>
+                <option>ESTP</option>
+                <option>ESFP</option>
+            </select>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- 오늘의 질문 설정 -->
+        <div class="mb-3">
+            <label for="qSource" class="form-label">오늘의 질문 설정</label>
+            <select id="qSource" class="form-select">
+                <option value="default">기본 질문(10개 제공)</option>
+                <option value="mbti">MBTI 맞춤 질문</option>
+                <option value="custom">사용자 정의 질문</option>
+            </select>
+            <div class="form-text">선택한 질문 설정이 diary에 적용됩니다.</div>
+        </div>
+
+        <!-- 사용자 정의 질문 -->
+        <div class="mb-3" id="customQsWrap">
+            <label class="form-label">나만의 질문 추가</label>
+            <div class="input-group mb-2">
+                <input type="text" id="myQInput" class="form-control" placeholder="질문을 입력하고 ‘추가’ 버튼을 눌러주세요" />
+                <button class="btn btn-outline-primary" id="btnAddMyQ"><i class="bi bi-plus-lg"></i> 추가</button>
+            </div>
+            <ul class="list-group" id="myQList"></ul>
+            <div class="hint mt-1">‘사용자 정의 질문’을 선택하면 이 목록의 질문이 사용됩니다.</div>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- 오늘의 한마디 -->
+        <div class="mb-3">
+            <label for="quoteMode" class="form-label">오늘의 한마디 설정</label>
+            <select id="quoteMode" class="form-select">
+                <option value="quote">명언(랜덤)</option>
+                <option value="mbti">MBTI별 맞춤 한마디</option>
+            </select>
+            <div class="form-text">선택한 방식이 메인/일기 페이지의 ‘오늘의 한마디’에 적용됩니다.</div>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- 저장 & 돌아가기 -->
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-primary" id="btnSave">저장</button>
+            <span class="badge bg-success ok-badge" id="savedOk"><i class="bi bi-check2"></i>&nbsp;저장됨</span>
+            <a href="index.html" class="btn btn-outline-secondary ms-auto">
+                <i class="bi bi-arrow-left"></i> 돌아가기
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let currentSettings = {};
+        let customQuestions = [];
+
+        // 페이지 로드 시 초기화
+        window.onload = async () => {
+            await loadSettings();
+            await loadCustomQuestions();
+            renderCustomQuestions();
+        };
+
+        // 설정 로드
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/settings');
+                currentSettings = await response.json();
+
+                // 라디오 버튼 설정
+                document.querySelector(`input[name="questionType"][value="${currentSettings.questionType}"]`).checked = true;
+                document.querySelector(`input[name="messageType"][value="${currentSettings.messageType}"]`).checked = true;
+
+                // MBTI 선택 설정
+                document.getElementById('mbtiSelect').value = currentSettings.selectedMBTI;
+                document.getElementById('mbtiMessageSelect').value = currentSettings.selectedMBTI;
+
+                // 조건부 표시
+                updateQuestionType();
+                updateMessageType();
+            } catch (error) {
+                console.error('설정 로드 실패:', error);
+            }
+        }
+
+        // 사용자 정의 질문 로드
+        async function loadCustomQuestions() {
+            try {
+                const response = await fetch('/api/questions');
+                const data = await response.json();
+                customQuestions = data.custom || [];
+            } catch (error) {
+                console.error('질문 로드 실패:', error);
+                customQuestions = [];
+            }
+        }
+
+        // 질문 유형 변경 시
+        function updateQuestionType() {
+            const questionType = document.querySelector('input[name="questionType"]:checked').value;
+            const mbtiSelector = document.getElementById('mbtiSelector');
+
+            if (questionType === 'mbti') {
+                mbtiSelector.style.display = 'block';
+            } else {
+                mbtiSelector.style.display = 'none';
+            }
+
+            saveSettings();
+        }
+
+        // 메시지 유형 변경 시
+        function updateMessageType() {
+            const messageType = document.querySelector('input[name="messageType"]:checked').value;
+            const mbtiMessageSelector = document.getElementById('mbtiMessageSelector');
+
+            if (messageType === 'mbti') {
+                mbtiMessageSelector.style.display = 'block';
+            } else {
+                mbtiMessageSelector.style.display = 'none';
+            }
+
+            saveSettings();
+        }
+
+        // 설정 저장
+        async function saveSettings() {
+            const questionType = document.querySelector('input[name="questionType"]:checked').value;
+            const messageType = document.querySelector('input[name="messageType"]:checked').value;
+            const selectedMBTI = document.getElementById('mbtiSelect').value;
+
+            const settings = {
+                questionType: questionType,
+                messageType: messageType,
+                selectedMBTI: selectedMBTI
+            };
+
+            try {
+                const response = await fetch('/api/settings', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(settings)
+                });
+
+                if (response.ok) {
+                    console.log('설정이 저장되었습니다.');
+                }
+            } catch (error) {
+                console.error('설정 저장 실패:', error);
+                alert('설정 저장에 실패했습니다.');
+            }
+        }
+
+        // 사용자 정의 질문 추가
+        async function addCustomQuestion() {
+            const input = document.getElementById('newQuestionInput');
+            const question = input.value.trim();
+
+            if (!question) {
+                alert('질문을 입력해주세요!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/questions/custom', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question: question })
+                });
+
+                if (response.ok) {
+                    input.value = '';
+                    await loadCustomQuestions();
+                    renderCustomQuestions();
+                    alert('질문이 추가되었습니다! ✅');
+                } else {
+                    alert('질문 추가에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('질문 추가 실패:', error);
+                alert('질문 추가 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 사용자 정의 질문 삭제
+        async function deleteCustomQuestion(index) {
+            if (!confirm('이 질문을 삭제하시겠습니까?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/questions/custom/${index}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    await loadCustomQuestions();
+                    renderCustomQuestions();
+                    alert('질문이 삭제되었습니다.');
+                } else {
+                    alert('질문 삭제에 실패했습니다.');
+                }
+            } catch (error) {
+                console.error('질문 삭제 실패:', error);
+                alert('질문 삭제 중 오류가 발생했습니다.');
+            }
+        }
+
+        // 사용자 정의 질문 렌더링
+        function renderCustomQuestions() {
+            const listDiv = document.getElementById('customQuestionsList');
+
+            if (customQuestions.length === 0) {
+                listDiv.innerHTML = '<p class="empty-message">아직 추가된 질문이 없습니다.</p>';
+                return;
+            }
+
+            listDiv.innerHTML = customQuestions.map((question, index) => `
+                <div class="question-item">
+                    <span class="question-text">${question}</span>
+                    <button class="btn btn-delete" onclick="deleteCustomQuestion(${index})">🗑️ 삭제</button>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+
+</html>

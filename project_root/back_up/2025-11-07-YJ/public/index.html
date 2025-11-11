@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memory Archive | Calendar</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="index_style.css" />
+</head>
+
+<body>
+    <!-- 헤더 -->
+    <header class="topbar">
+        <div class="wrap d-flex align-items-center justify-content-between">
+            <div class="brand"><i class="bi bi-journal-bookmark"></i> Memory Archive</div>
+
+            <div class="d-flex align-items-center gap-2">
+                <span id="mbtiBadge" class="badge rounded-pill mbti-badge">MBTI: 미설정</span>
+                <a href="option.html" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-gear"></i> 설정
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 -->
+    <main class="wrap">
+        <!-- 달력 -->
+        <section class="calendar-shell">
+            <div class="cal-header">
+                <div class="cal-title">
+                    <h1 id="monthTitle">YYYY년 M월</h1>
+                    <span class="badge rounded-pill">Calendar</span>
+                </div>
+
+                <!-- 이전달/다음달 -->
+                <div class="month-nav d-flex align-items-center gap-2">
+                    <button class="btn btn-outline-secondary btn-sm" id="btnPrev">
+                        <i class="bi bi-chevron-left"></i> 이전달
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" id="btnToday">오늘</button>
+                    <button class="btn btn-outline-secondary btn-sm" id="btnNext">
+                        다음달 <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="weekdays">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+            </div>
+
+            <!-- 동적으로 채울 그리드 -->
+            <div class="grid" id="calendarGrid"></div>
+        </section>
+
+        <!-- 오늘의 한마디 + 감정 그래프 -->
+        <aside class="quote-box">
+            <h2>오늘의 한마디 💬</h2>
+            <div class="quote-text">“작은 발걸음이라도 매일 나아가면<br>결국 큰 길을 완성하게 된다.”</div>
+            <div class="divider"></div>
+
+            <div class="mood-card">
+                <div class="mood-title">감정 그래프 <span class="text-muted" style="font-weight:400">(이번 주)</span></div>
+                <div class="mood-legend">
+                    <span class="pill">아주 좋음</span><span class="pill">좋음</span>
+                    <span class="pill">보통</span><span class="pill">살짝 다운</span><span class="pill">우울</span>
+                </div>
+
+                <div class="mood-graph-wrap">
+                    <div class="mood-scale-vertical"><span>높음</span><span>낮음</span></div>
+                    <div class="mood-graph">
+                        <div class="bar" style="--v:80" data-label="Sun"></div>
+                        <div class="bar" style="--v:65" data-label="Mon"></div>
+                        <div class="bar" style="--v:50" data-label="Tue"></div>
+                        <div class="bar" style="--v:70" data-label="Wed"></div>
+                        <div class="bar" style="--v:40" data-label="Thu"></div>
+                        <div class="bar" style="--v:85" data-label="Fri"></div>
+                        <div class="bar" style="--v:60" data-label="Sat"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script>
+        // ====== 상태 ======
+        let view = new Date();                         // 수정 : 상태 변수 구조 변경 (기존 currentYear/currentMonth → Date 객체 기반 view로 단순화)
+        let viewYear = view.getFullYear();             // 수정 : currentYear 대신 viewYear 사용
+        let viewMonth = view.getMonth();               // 수정 : currentMonth 대신 viewMonth 사용
+        // 수정 : diariesData(서버 데이터) 사용 제거 → 로컬스토리지 기반으로 전환
+
+        // 브라우저가 DOM을 다 읽은 뒤 실행 (window.onload → DOMContentLoaded)
+        window.addEventListener('DOMContentLoaded', () => {   // 수정 : window.onload(이미지/리소스까지 대기) → DOMContentLoaded(구조만 준비되면 실행)로 변경
+            renderCalendar();                                  // 수정 : 초기화 시 서버 호출(loadTodayMessage/loadDiaries) 제거, 바로 달력 렌더만 수행
+
+            // 이전달
+            document.getElementById('btnPrev').addEventListener('click', () => {
+                if (viewMonth === 0) { viewMonth = 11; viewYear--; }
+                else viewMonth--;
+                renderCalendar();
+            });                                               // 수정 : changeMonth(delta) 함수 사용 제거, 버튼 리스너에서 직접 월/년 갱신
+
+            // 다음달
+            document.getElementById('btnNext').addEventListener('click', () => {
+                if (viewMonth === 11) { viewMonth = 0; viewYear++; }
+                else viewMonth++;
+                renderCalendar();
+            });                                               // 수정 : 동일하게 changeMonth 제거 로직
+
+            // 오늘 버튼
+            document.getElementById('btnToday').addEventListener('click', () => {
+                const t = new Date();
+                viewYear = t.getFullYear();
+                viewMonth = t.getMonth();
+                renderCalendar();
+            });                                               // 수정 : 오늘 이동 로직 단순화 (별도 전역 today 상태 없이 즉시 계산)
+        });
+
+        // ====== 유틸 ======
+        function toISO(y, m, d) {                              // 수정 : 날짜 포맷 유틸 신규 추가 (YYYY-MM-DD 고정 포맷)
+            const mm = String(m).padStart(2, '0');
+            const dd = String(d).padStart(2, '0');
+            return `${y}-${mm}-${dd}`;
+        }
+
+        // ====== 렌더링 ======
+        function renderCalendar() {                             // 수정 : 핵심 렌더 함수 재구성 (서버 데이터/모달 의존 제거)
+            const grid = document.getElementById('calendarGrid');
+            const title = document.getElementById('monthTitle'); // 수정 : 제목 요소 id 변경 (currentMonth → monthTitle)
+
+            // 제목 업데이트
+            title.textContent = `${viewYear}년 ${viewMonth + 1}월`;
+
+            // 초기화
+            grid.innerHTML = '';
+
+            // 달력 정보 계산
+            const first = new Date(viewYear, viewMonth, 1);
+            const last = new Date(viewYear, viewMonth + 1, 0);
+            const firstDay = first.getDay();
+            const daysInMonth = last.getDate();
+
+            // 이전달 여백 채우기
+            for (let i = 0; i < firstDay; i++) {
+                const div = document.createElement('div');
+                div.className = 'cell muted';                   // 수정 : 빈칸 클래스 변경 (empty → cell muted)
+                grid.appendChild(div);
+            }
+
+            // 날짜 채우기
+            const todayIso = new Date().toISOString().slice(0, 10); // 수정 : 오늘 비교값 생성 방식 변경 (Date 조립 → ISO 슬라이스)
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = toISO(viewYear, viewMonth + 1, d);  // 수정 : 날짜 키 생성 방식 변경 (문자열 조합 → toISO 유틸)
+                const cell = document.createElement('div');
+                cell.className = 'cell';                            // 수정 : 셀 클래스 네이밍 변경 (calendar-day → cell)
+                cell.setAttribute('data-date', dateStr);
+
+                const num = document.createElement('div');
+                num.className = 'date-num';                         // 수정 : 숫자 클래스 변경 (date-number → date-num)
+                num.textContent = String(d);
+                cell.appendChild(num);
+
+                // 오늘 칸 강조 
+                if (dateStr === todayIso) {                         // 수정 : today 판별 로직 유지하되
+                    cell.classList.add('today');                    // 수정 : 인라인 배경/색상 지정 → CSS 클래스 today로 일원화
+                }
+
+                // 기분 이모지 불러오기
+                const emo = localStorage.getItem(`ma_mood_${dateStr}`); // 수정 : 서버 diariesData 대신 localStorage 키(ma_mood_YYYY-MM-DD)에서 이모지 로드
+                if (emo) {
+                    const badge = document.createElement('span');
+                    badge.className = 'mood-emoji';                 // 수정 : 이모지 뱃지 클래스 유지(렌더 구조만 단순화)
+                    badge.textContent = emo;
+                    cell.appendChild(badge);
+                    cell.classList.add('has-emoji');                // 수정 : 이모지 있을 때 여백/레이아웃 보정용 클래스 추가
+                }
+
+                // 더블클릭 시 diary.html 이동
+                attachDoubleClick(cell, dateStr);                   // 수정 : 단일 클릭 모달(viewDiary) → 더블클릭 페이지 이동(diary.html?date=...)로 UX 변경
+
+                grid.appendChild(cell);
+            }
+
+            // 다음달 빈칸 채우기
+            const totalCells = firstDay + daysInMonth;
+            const tail = (7 - (totalCells % 7)) % 7;
+            for (let i = 0; i < tail; i++) {
+                const div = document.createElement('div');
+                div.className = 'cell muted';                       // 수정 : 동일하게 빈칸 클래스(cell muted) 사용
+                grid.appendChild(div);
+            }
+        }
+
+        // 더블클릭 유틸 함수
+        function attachDoubleClick(cell, dateStr) {                 // 수정 : 더블클릭 감지 유틸 신규 추가 (단일 클릭 모달 로직 제거 대체)
+            let clicks = 0, timer = null;
+            cell.addEventListener('click', () => {
+                clicks++;
+                if (clicks === 2) {
+                    clearTimeout(timer);
+                    window.location.href = `diary.html?date=${dateStr}`; // 수정 : 모달 오픈(viewDiary) → 페이지 이동
+                } else {
+                    timer = setTimeout(() => { clicks = 0; }, 500);
+                }
+            });
+        }
+
+        // -------------------------------
+        // 참고 : 아래 기능들은 제거/대체됨
+        // - loadTodayMessage() / loadDiaries() : 서버 API(fetch) 의존 제거
+        // - diariesData / getWeatherColor() / getWeatherEmoji() : 날씨색/이모지 표시 제거
+        // - viewDiary(), closeModal(), window.onclick : 모달 기반 뷰 제거
+        // - changeMonth(delta) : 월 변경 헬퍼 제거, 버튼 리스너에서 직접 처리
+        // - 요일 헤더 생성 : JS로 생성하던 부분 삭제(HTML에서 이미 주간 헤더를 렌더)
+        // -------------------------------
+    </script>
+
+
+</body>
+
+</html>
