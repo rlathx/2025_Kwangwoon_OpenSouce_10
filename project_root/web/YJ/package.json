@@ -1,0 +1,19 @@
+{
+    "name": "theme-diary",
+    "version": "1.0.0",
+    "description": "테마 일기 애플리케이션",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "keywords": [
+        "diary",
+        "journal"
+    ],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.21.2"
+    }
+}

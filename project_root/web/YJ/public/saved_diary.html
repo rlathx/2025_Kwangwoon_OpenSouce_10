@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memory Archive | 일기 보기</title>
+    <link rel="stylesheet" href="saved_diary_style.css" />
+</head>
+
+<body>
+    <div class="diary-container">
+        <!-- 헤더 -->
+        <header class="diary-header">
+            <h1>오늘의 기록 📖</h1>
+            <p>기억을 담는 하루, Memory Archive</p>
+        </header>
+
+        <!-- 메타 -->
+        <section class="diary-meta">
+            <div class="meta-row">
+                <span class="meta-label">날짜:</span>
+                <span class="meta-value" id="metaDate">2025-11-06</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">기분:</span>
+                <span class="meta-value" id="metaMood">—</span>
+            </div>
+            <div class="meta-row">
+                <span class="meta-label">날씨:</span>
+                <span class="meta-value" id="metaWeather">—</span>
+            </div>
+        </section>
+
+        <!-- 본문 카드 -->
+        <article class="entry-card">
+            <div class="entry-body" id="entryBody">
+                오늘은 ~~ 과제를 했다. 과제가 비록 어려웠지만, 끝까지 다 해내니 성취감을 느꼈다.
+            </div>
+        </article>
+
+        <!-- 오늘의 한 줄 요약 -->
+        <section class="summary-section">
+            <h3>오늘의 한 줄 요약 ✨</h3>
+            <p id="summaryText">
+                과제를 해결하며 성취감을 느낀 하루!
+            </p>
+        </section>
+
+        <!-- 작년 오늘의 나 보기 -->
+        <section class="lastyear-section">
+            <h3>작년 오늘의 나 보기 📅</h3>
+
+            <!-- 작년 일기 있을 때 -->
+            <div class="lastyear-entry" id="lastyearEntry">
+                <div class="lastyear-meta">
+                    <span class="chip mood">😌 평온</span>
+                    <span class="chip weather">🌤️ 맑음</span>
+                    <span class="lastyear-date">2024-11-06</span>
+                </div>
+                <p class="lastyear-body">
+                    오늘은 ~~를 했다
+                </p>
+            </div>
+
+            <!-- 작년 일기 없을 때 -->
+            <!-- 아래 부분은 JS에서 조건에 따라 보여지게 구현해도 가능 -->
+            <div class="lastyear-empty" id="lastyearEmpty" style="display:none;">
+                <div class="emoji">📭</div>
+                <p class="empty-text">작년 오늘의 기록이 없어요!</p>
+            </div>
+        </section>
+
+        <!-- 버튼 -->
+        <div class="button-row">
+            <a class="btn" id="btnBack" href="index.html">← 뒤로가기</a>
+            <a class="btn save" id="btnEdit" href="diary.html?date=2025-11-06">수정하기 ✍️</a>
+        </div>
+    </div>
+
+    <!-- 연동 포인트 (JS에서):
+    - URL의 ?date=YYYY-MM-DD 읽기
+    - 데이터 없으면: location.href = `diary.html?date=${date}`
+    - 있으면: #metaDate, #metaMood, #metaWeather, #entryTitle, #entryBody, #entryTags 갱신
+    - #btnEdit 링크도 해당 날짜로 교체
+  -->
+</body>
+
+</html>
