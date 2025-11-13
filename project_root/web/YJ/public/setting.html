@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memory Archive | 설정</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="setting_style.css" />
+</head>
+
+<body>
+    <div class="settings-card">
+        <h1><i class="bi bi-sliders"></i> 설정</h1>
+
+        <!-- MBTI -->
+        <div class="mb-3">
+            <label for="mbtiSelect" class="form-label">MBTI 선택</label>
+            <select id="mbtiSelect" class="form-select">
+                <option value="" selected>선택하세요</option>
+                <option>INTJ</option>
+                <option>INTP</option>
+                <option>ENTJ</option>
+                <option>ENTP</option>
+                <option>INFJ</option>
+                <option>INFP</option>
+                <option>ENFJ</option>
+                <option>ENFP</option>
+                <option>ISTJ</option>
+                <option>ISFJ</option>
+                <option>ESTJ</option>
+                <option>ESFJ</option>
+                <option>ISTP</option>
+                <option>ISFP</option>
+                <option>ESTP</option>
+                <option>ESFP</option>
+            </select>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- 오늘의 질문 설정 -->
+        <div class="mb-3">
+            <label for="qSource" class="form-label">오늘의 질문 설정</label>
+            <select id="qSource" class="form-select">
+                <option value="default">기본 질문(10개 제공)</option>
+                <option value="mbti">MBTI 맞춤 질문</option>
+                <option value="custom">사용자 정의 질문</option>
+            </select>
+            <div class="form-text">선택한 질문 설정이 diary에 적용됩니다.</div>
+        </div>
+
+        <!-- 사용자 정의 질문 -->
+        <div class="mb-3" id="customQsWrap">
+            <label class="form-label">나만의 질문 추가</label>
+            <div class="input-group mb-2">
+                <input type="text" id="myQInput" class="form-control" placeholder="질문을 입력하고 ‘추가’ 버튼을 눌러주세요" />
+                <button class="btn btn-outline-primary" id="btnAddMyQ"><i class="bi bi-plus-lg"></i> 추가</button>
+            </div>
+            <ul class="list-group" id="myQList"></ul>
+            <div class="hint mt-1">‘사용자 정의 질문’을 선택하면 이 목록의 질문이 사용됩니다.</div>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- 오늘의 한마디 -->
+        <div class="mb-3">
+            <label for="quoteMode" class="form-label">오늘의 한마디 설정</label>
+            <select id="quoteMode" class="form-select">
+                <option value="quote">명언(랜덤)</option>
+                <option value="mbti">MBTI별 맞춤 한마디</option>
+            </select>
+            <div class="form-text">선택한 방식이 메인/일기 페이지의 ‘오늘의 한마디’에 적용됩니다.</div>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- 저장 & 돌아가기 -->
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-primary" id="btnSave">저장</button>
+            <span class="badge bg-success ok-badge" id="savedOk"><i class="bi bi-check2"></i>&nbsp;저장됨</span>
+            <a href="index.html" class="btn btn-outline-secondary ms-auto">
+                <i class="bi bi-arrow-left"></i> 돌아가기
+            </a>
+        </div>
+    </div>
+    <script defer src="setting.js"></script>
+</body>
+
+</html>
